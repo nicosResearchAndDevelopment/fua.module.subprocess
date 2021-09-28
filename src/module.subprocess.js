@@ -21,7 +21,7 @@ exports.ExecutionProcess = function (exe, {cwd = process.cwd(), verbose = false,
      * @param {...any} args
      * @returns {Promise<string | Buffer>}
      */
-    async function processor(...args) {
+    async function launcher(...args) {
         const subprocess = child_process.spawn(exe, util.flattenArgs(args), {cwd});
         if (verbose) process.stdout.write('$ ' + cwd + '> ' + subprocess.spawnargs.join(' ') + '\n');
         const stdout = [], stderr = [];
@@ -41,9 +41,9 @@ exports.ExecutionProcess = function (exe, {cwd = process.cwd(), verbose = false,
             const resultBuffer = Buffer.concat(stdout.length ? stdout : stderr);
             return util.decodeBuffer(resultBuffer, encoding);
         }
-    } // processor
+    } // launcher
 
-    return processor;
+    return launcher;
 }; // ExecutionProcess
 
 /**
@@ -57,7 +57,7 @@ exports.RunningProcess = function (exe, {cwd = process.cwd(), verbose = false} =
     util.assert(util.isString(cwd), 'RunningProcess : expected cwd to be a path string', TypeError);
     util.assert(util.isBoolean(verbose), 'RunningProcess : expected verbose to be a boolean', TypeError);
 
-    function processor(...args) {
+    function launcher(...args) {
         const subprocess = child_process.spawn(exe, util.flattenArgs(args), {cwd});
         if (verbose) {
             process.stdout.write('$ ' + cwd + '> ' + subprocess.spawnargs.join(' ') + '\n');
@@ -65,7 +65,7 @@ exports.RunningProcess = function (exe, {cwd = process.cwd(), verbose = false} =
             subprocess.stderr.on('data', (data) => process.stderr.write(data));
         }
         return subprocess;
-    } // processor
+    } // launcher
 
-    return processor;
+    return launcher;
 }; // RunningProcess
