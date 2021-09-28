@@ -232,6 +232,7 @@ const ASCII_CP437 = {
  */
 util.decodeBuffer = function (buffer, encoding = 'utf-8') {
     switch (encoding.toLowerCase()) {
+        case 'none':
         case 'buffer':
             return buffer;
         case 'cp437':
