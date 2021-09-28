@@ -25,6 +25,7 @@ exports.ExecutionProcess = function (exe, {cwd = process.cwd(), verbose = false,
         const subprocess = child_process.spawn(exe, util.flattenArgs(args), {cwd});
         if (verbose) process.stdout.write('$ ' + cwd + '> ' + subprocess.spawnargs.join(' ') + '\n');
         const stdout = [], stderr = [];
+        let error    = null;
         subprocess.stdout.on('data', (data) => {
             stdout.push(data);
             if (verbose) process.stdout.write(data);
@@ -33,10 +34,16 @@ exports.ExecutionProcess = function (exe, {cwd = process.cwd(), verbose = false,
             stderr.push(data);
             if (verbose) process.stderr.write(data);
         });
+        subprocess.on('error', (err) => (error = err));
         const exitCode = await new Promise((resolve) => subprocess.on('close', resolve));
         if (exitCode !== 0) {
-            const errBuffer = Buffer.concat(stderr);
-            throw new Error(errBuffer.toString());
+            if (!error) {
+                const errBuffer = Buffer.concat(stderr.length ? stderr : stdout);
+                error           = new Error(util.decodeBuffer(errBuffer, encoding).toString().trim());
+            }
+            error.code = exitCode;
+            Error.captureStackTrace(error, launcher);
+            throw error;
         } else {
             const resultBuffer = Buffer.concat(stdout.length ? stdout : stderr);
             return util.decodeBuffer(resultBuffer, encoding);

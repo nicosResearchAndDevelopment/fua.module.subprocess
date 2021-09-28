@@ -9,7 +9,16 @@ describe('module.subprocess', function () {
 
         test('ping', async function () {
             const ping = ExecutionProcess('ping', {encoding: 'cp437'});
-            console.log(await ping({n: 1}, 'google.com'));
+            await expect(ping()).rejects.toThrow();
+            const result = await ping({n: 1}, 'google.com');
+            expect(typeof result).toBe('string');
+            console.log(result);
+            // console.log(await ping());
+        });
+
+        test('marzipan', async function () {
+            const marzipan = ExecutionProcess('marzipan');
+            await expect(marzipan()).rejects.toThrow();
         });
 
     });
