@@ -23,10 +23,10 @@ util.flattenArgs = function (args) {
                         : '-' + key;
             if (util.isArray(value)) {
                 for (let entry of value) {
-                    if (util.isString(value)) {
+                    if (util.isString(entry)) {
                         result.push(key);
                         result.push(entry);
-                    } else if (util.isNumber(value)) {
+                    } else if (util.isNumber(entry)) {
                         result.push(key);
                         result.push('' + entry);
                     }
