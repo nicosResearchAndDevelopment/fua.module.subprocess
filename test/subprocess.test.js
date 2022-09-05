@@ -24,7 +24,7 @@ describe('module.subprocess', function () {
     });
 
     test('parseArgv', function () {
-        console.log(parseArgv(['node', 'script.js', '--test', 'lorem=ipsum', '--hello', 'world']));
+        console.log(parseArgv(['node', 'script.js', '--test', 'lorem=ipsum', '--hello', 'world', '--answer', '42']));
     });
 
 }); // describe

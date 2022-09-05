@@ -78,7 +78,7 @@ exports.RunningProcess = function (exe, {cwd = process.cwd(), verbose = false} =
 }; // RunningProcess
 
 /**
- * @param argv
+ * @param {Array<string>} [argv]
  * @returns {{args: Array<string>, param: {Object}}}
  */
 exports.parseArgv = function (argv = process.argv) {
@@ -86,24 +86,22 @@ exports.parseArgv = function (argv = process.argv) {
 
     const
         tmp_args     = [],
-        args         = [],
-        param        = {},
-        RE_match_arg = /^(--?)?([0-9a-z\-_.?$]+)(?:(=)(.*))?$/i,
-        cleanupValue = (val) => val.substring((val.startsWith('"') ? 1 : 0), val.length - (val.endsWith('"') ? 1 : 0));
+        param        = {_: []},
+        RE_match_arg = /^(--?)?([0-9a-z\-_.?$]+)(?:(=)(.*))?$/i;
 
     for (let arg of argv) {
         const res = RE_match_arg.exec(arg);
         if (res) {
             if (res[3]) {
                 tmp_args.push({type: 'key', value: res[2]});
-                tmp_args.push({type: 'val', value: cleanupValue(res[4])});
+                tmp_args.push({type: 'val', value: util.parseEscapedString(res[4])});
             } else if (res[1]) {
                 tmp_args.push({type: 'key', value: res[2]});
             } else {
-                tmp_args.push({type: 'val', value: cleanupValue(arg)});
+                tmp_args.push({type: 'val', value: util.parseEscapedString(arg)});
             }
         } else {
-            tmp_args.push({type: 'val', value: cleanupValue(arg)});
+            tmp_args.push({type: 'val', value: util.parseEscapedString(arg)});
         }
     }
 
@@ -121,9 +119,32 @@ exports.parseArgv = function (argv = process.argv) {
                 param[key].push(value);
             }
         } else {
-            args.push(tmp_args[index].value);
+            param._.push(tmp_args[index].value);
         }
     }
 
-    return {param, args};
+    return param;
 }; // parseArgv
+
+// /**
+//  * @param {Array<string>} [argv]
+//  * @returns {{[key: string]: boolean | number | string | Array<boolean | number | string>}}
+//  */
+// exports.parseArgv = function (argv = process.argv) {
+//     const result = {_: []};
+//     // let index    = 2;
+//     // const result = {_: argv.slice(0, 2)};
+//     let index = 0;
+//     while (index < argv.length) {
+//         const
+//             isBlank = !argv[index].startsWith('-'),
+//             isTag   = !isBlank && (!argv[index + 1] || argv[index + 1].startsWith('-')),
+//             key     = isBlank ? '_' : argv[index].replace(/^--?/, ''),
+//             value   = isBlank ? util.parseString(argv[index]) : isTag ? true : util.parseString(argv[index + 1]);
+//         index += isBlank || isTag ? 1 : 2;
+//         if (!(key in result)) result[key] = value;
+//         else if (Array.isArray(result[key])) result[key].push(value);
+//         else result[key] = [result[key], value];
+//     }
+//     return result;
+// }; // parseArgv

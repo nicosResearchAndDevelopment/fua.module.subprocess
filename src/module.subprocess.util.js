@@ -243,4 +243,26 @@ util.decodeBuffer = function (buffer, encoding = 'utf-8') {
     }
 }; // decodeBuffer
 
-module.exports = util;
+/**
+ * @param {string} str
+ * @returns {boolean | number | string}
+ */
+util.parseString = function (str) {
+    if (/^(?:true|false)$/.test(str))
+        return str.toLowerCase() === 'true';
+    if (/^\d+(?:\.\d+)?$/.test(str))
+        return Number(str);
+    return str;
+};
+
+/**
+ * @param {string} str
+ * @returns {boolean | number | string}
+ */
+util.parseEscapedString = function (str) {
+    if (str.startsWith('"') && str.endsWith('"'))
+        str = str.substring(0, str.length - 1).replace(/\\"/g, '"');
+    return util.parseString(str);
+};
+
+module.exports = Object.freeze(util);
