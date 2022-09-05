@@ -98,10 +98,10 @@ exports.parseArgv = function (argv = process.argv) {
             } else if (res[1]) {
                 tmp_args.push({type: 'key', value: res[2]});
             } else {
-                tmp_args.push({type: 'val', value: util.parseEscapedString(arg)});
+                tmp_args.push({type: 'val', value: util.parseString(arg)});
             }
         } else {
-            tmp_args.push({type: 'val', value: util.parseEscapedString(arg)});
+            tmp_args.push({type: 'val', value: util.parseString(arg)});
         }
     }
 
