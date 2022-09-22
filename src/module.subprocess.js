@@ -50,6 +50,36 @@ exports.ExecutionProcess = function (exe, {cwd = process.cwd(), verbose = false,
         }
     } // launcher
 
+    Object.defineProperties(launcher, {
+        cwd:      {
+            get() {
+                return cwd;
+            },
+            set(value) {
+                util.assert(util.isString(value), 'ExecutionProcess : expected cwd to be a path string', TypeError);
+                cwd = value;
+            }
+        },
+        verbose:  {
+            get() {
+                return verbose;
+            },
+            set(value) {
+                util.assert(util.isBoolean(value), 'ExecutionProcess : expected verbose to be a boolean', TypeError);
+                verbose = value;
+            }
+        },
+        encoding: {
+            get() {
+                return encoding;
+            },
+            set(value) {
+                util.assert(util.isString(value), 'ExecutionProcess : expected encoding to be a string', TypeError);
+                encoding = value;
+            }
+        }
+    });
+
     return launcher;
 }; // ExecutionProcess
 
@@ -73,6 +103,27 @@ exports.RunningProcess = function (exe, {cwd = process.cwd(), verbose = false} =
         }
         return subprocess;
     } // launcher
+
+    Object.defineProperties(launcher, {
+        cwd:      {
+            get() {
+                return cwd;
+            },
+            set(value) {
+                util.assert(util.isString(value), 'RunningProcess : expected cwd to be a path string', TypeError);
+                cwd = value;
+            }
+        },
+        verbose:  {
+            get() {
+                return verbose;
+            },
+            set(value) {
+                util.assert(util.isBoolean(value), 'RunningProcess : expected verbose to be a boolean', TypeError);
+                verbose = value;
+            }
+        }
+    });
 
     return launcher;
 }; // RunningProcess
