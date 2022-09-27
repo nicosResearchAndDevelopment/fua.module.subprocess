@@ -9,20 +9,27 @@ const
  * @param {string} [cwd=process.cwd()]
  * @param {boolean} [verbose=false]
  * @param {string} [encoding='buffer']
+ * @param {boolean} [shell=false]
  * @returns {function(...any): Promise<string>}
  */
-exports.ExecutionProcess = function (exe, {cwd = process.cwd(), verbose = false, encoding = 'utf-8'} = {}) {
+exports.ExecutionProcess = function (exe, {
+    cwd = process.cwd(),
+    verbose = false,
+    encoding = 'utf-8',
+    shell = false
+} = {}) {
     util.assert(util.isExecutable(exe), 'ExecutionProcess : expected exe to be an executable string', TypeError);
     util.assert(util.isString(cwd), 'ExecutionProcess : expected cwd to be a path string', TypeError);
     util.assert(util.isBoolean(verbose), 'ExecutionProcess : expected verbose to be a boolean', TypeError);
     util.assert(util.isString(encoding), 'ExecutionProcess : expected encoding to be a string', TypeError);
+    util.assert(util.isBoolean(shell), 'ExecutionProcess : expected shell to be a boolean', TypeError);
 
     /**
      * @param {...any} args
      * @returns {Promise<string | Buffer>}
      */
     async function launcher(...args) {
-        const subprocess = child_process.spawn(exe, util.flattenArgs(args), {cwd});
+        const subprocess = child_process.spawn(exe, util.flattenArgs(args), {cwd, shell});
         if (verbose) process.stdout.write('$ ' + cwd + '> ' + subprocess.spawnargs.join(' ') + '\n');
         const stdout = [], stderr = [];
         let error    = null;
@@ -77,6 +84,11 @@ exports.ExecutionProcess = function (exe, {cwd = process.cwd(), verbose = false,
                 util.assert(util.isString(value), 'ExecutionProcess : expected encoding to be a string', TypeError);
                 encoding = value;
             }
+        },
+        shell:    {
+            get() {
+                return shell;
+            }
         }
     });
 
@@ -87,15 +99,21 @@ exports.ExecutionProcess = function (exe, {cwd = process.cwd(), verbose = false,
  * @param {string} exe
  * @param {string} [cwd=process.cwd()]
  * @param {boolean} [verbose=false]
+ * @param {boolean} [shell=false]
  * @returns {function(...any): module:child_process.ChildProcess}
  */
-exports.RunningProcess = function (exe, {cwd = process.cwd(), verbose = false} = {}) {
+exports.RunningProcess = function (exe, {
+    cwd = process.cwd(),
+    verbose = false,
+    shell = false
+} = {}) {
     util.assert(util.isExecutable(exe), 'RunningProcess : expected exe to be an executable string', TypeError);
     util.assert(util.isString(cwd), 'RunningProcess : expected cwd to be a path string', TypeError);
     util.assert(util.isBoolean(verbose), 'RunningProcess : expected verbose to be a boolean', TypeError);
+    util.assert(util.isBoolean(shell), 'RunningProcess : expected shell to be a boolean', TypeError);
 
     function launcher(...args) {
-        const subprocess = child_process.spawn(exe, util.flattenArgs(args), {cwd});
+        const subprocess = child_process.spawn(exe, util.flattenArgs(args), {cwd, shell});
         if (verbose) {
             process.stdout.write('$ ' + cwd + '> ' + subprocess.spawnargs.join(' ') + '\n');
             subprocess.stdout.on('data', (data) => process.stdout.write(data));
@@ -105,7 +123,7 @@ exports.RunningProcess = function (exe, {cwd = process.cwd(), verbose = false} =
     } // launcher
 
     Object.defineProperties(launcher, {
-        cwd:      {
+        cwd:     {
             get() {
                 return cwd;
             },
@@ -114,13 +132,18 @@ exports.RunningProcess = function (exe, {cwd = process.cwd(), verbose = false} =
                 cwd = value;
             }
         },
-        verbose:  {
+        verbose: {
             get() {
                 return verbose;
             },
             set(value) {
                 util.assert(util.isBoolean(value), 'RunningProcess : expected verbose to be a boolean', TypeError);
                 verbose = value;
+            }
+        },
+        shell:   {
+            get() {
+                return shell;
             }
         }
     });
