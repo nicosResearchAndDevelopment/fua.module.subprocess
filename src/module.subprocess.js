@@ -152,8 +152,8 @@ exports.RunningProcess = function (exe, {
 }; // RunningProcess
 
 /**
- * @param {Array<string>} [argv]
- * @returns {{args: Array<string>, param: {Object}}}
+ * @param {Array<string>} [argv=process.argv]
+ * @returns {{_: Array<string>, [key: string]: boolean | string | Array<string>}}
  */
 exports.parseArgv = function (argv = process.argv) {
     util.assert(util.isStringArray(argv), 'parseArgv : expected argv to be a string array', TypeError);
