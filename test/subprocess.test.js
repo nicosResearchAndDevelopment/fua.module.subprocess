@@ -1,7 +1,7 @@
 const
     {describe, test}              = require('mocha'),
     expect                        = require('expect'),
-    {ExecutionProcess, parseArgv} = require('../src/module.subprocess.js');
+    {ExecutionProcess, parseArgv} = require('../src/subprocess.js');
 
 describe('module.subprocess', function () {
 

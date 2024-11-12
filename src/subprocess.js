@@ -1,8 +1,8 @@
 const
-    util          = require('./module.subprocess.util.js'),
+    assert        = require('@nrd/fua.core.assert'),
+    is            = require('@nrd/fua.core.is'),
+    util          = require('./util.js'),
     child_process = require('child_process');
-//     EventEmitter  = require('events'),
-//     {Readable}    = require('stream');
 
 /**
  * @param {string} exe
@@ -18,11 +18,11 @@ exports.ExecutionProcess = function (exe, {
     encoding = 'utf-8',
     shell = false
 } = {}) {
-    util.assert(util.isExecutable(exe), 'ExecutionProcess : expected exe to be an executable string', TypeError);
-    util.assert(util.isString(cwd), 'ExecutionProcess : expected cwd to be a path string', TypeError);
-    util.assert(util.isBoolean(verbose), 'ExecutionProcess : expected verbose to be a boolean', TypeError);
-    util.assert(util.isString(encoding), 'ExecutionProcess : expected encoding to be a string', TypeError);
-    util.assert(util.isBoolean(shell), 'ExecutionProcess : expected shell to be a boolean', TypeError);
+    assert(util.isExecutable(exe), 'expected exe to be an executable string', TypeError);
+    assert(is.string(cwd), 'expected cwd to be a path string', TypeError);
+    assert(is.boolean(verbose), 'expected verbose to be a boolean', TypeError);
+    assert(is.string(encoding), 'expected encoding to be a string', TypeError);
+    assert(is.boolean(shell), 'expected shell to be a boolean', TypeError);
 
     /**
      * @param {...any} args
@@ -63,7 +63,7 @@ exports.ExecutionProcess = function (exe, {
                 return cwd;
             },
             set(value) {
-                util.assert(util.isString(value), 'ExecutionProcess : expected cwd to be a path string', TypeError);
+                assert(is.string(value), 'expected cwd to be a path string', TypeError);
                 cwd = value;
             }
         },
@@ -72,7 +72,7 @@ exports.ExecutionProcess = function (exe, {
                 return verbose;
             },
             set(value) {
-                util.assert(util.isBoolean(value), 'ExecutionProcess : expected verbose to be a boolean', TypeError);
+                assert(is.boolean(value), 'expected verbose to be a boolean', TypeError);
                 verbose = value;
             }
         },
@@ -81,7 +81,7 @@ exports.ExecutionProcess = function (exe, {
                 return encoding;
             },
             set(value) {
-                util.assert(util.isString(value), 'ExecutionProcess : expected encoding to be a string', TypeError);
+                assert(is.string(value), 'expected encoding to be a string', TypeError);
                 encoding = value;
             }
         },
@@ -107,10 +107,10 @@ exports.RunningProcess = function (exe, {
     verbose = false,
     shell = false
 } = {}) {
-    util.assert(util.isExecutable(exe), 'RunningProcess : expected exe to be an executable string', TypeError);
-    util.assert(util.isString(cwd), 'RunningProcess : expected cwd to be a path string', TypeError);
-    util.assert(util.isBoolean(verbose), 'RunningProcess : expected verbose to be a boolean', TypeError);
-    util.assert(util.isBoolean(shell), 'RunningProcess : expected shell to be a boolean', TypeError);
+    assert(util.isExecutable(exe), 'expected exe to be an executable string', TypeError);
+    assert(is.string(cwd), 'expected cwd to be a path string', TypeError);
+    assert(is.boolean(verbose), 'expected verbose to be a boolean', TypeError);
+    assert(is.boolean(shell), 'expected shell to be a boolean', TypeError);
 
     function launcher(...args) {
         const subprocess = child_process.spawn(exe, util.flattenArgs(args), {cwd, shell});
@@ -128,7 +128,7 @@ exports.RunningProcess = function (exe, {
                 return cwd;
             },
             set(value) {
-                util.assert(util.isString(value), 'RunningProcess : expected cwd to be a path string', TypeError);
+                assert(is.string(value), 'expected cwd to be a path string', TypeError);
                 cwd = value;
             }
         },
@@ -137,7 +137,7 @@ exports.RunningProcess = function (exe, {
                 return verbose;
             },
             set(value) {
-                util.assert(util.isBoolean(value), 'RunningProcess : expected verbose to be a boolean', TypeError);
+                assert(is.boolean(value), 'expected verbose to be a boolean', TypeError);
                 verbose = value;
             }
         },
@@ -156,7 +156,7 @@ exports.RunningProcess = function (exe, {
  * @returns {{_: Array<string>, [key: string]: boolean | string | Array<string>}}
  */
 exports.parseArgv = function (argv = process.argv) {
-    util.assert(util.isStringArray(argv), 'parseArgv : expected argv to be a string array', TypeError);
+    assert(is.array.strings(argv), 'expected argv to be a string array', TypeError);
 
     const
         tmp_args     = [],
@@ -187,7 +187,7 @@ exports.parseArgv = function (argv = process.argv) {
                     ? true : tmp_args[++index].value;
             if (!(key in param)) {
                 param[key] = value;
-            } else if (!util.isArray(param[key])) {
+            } else if (!is.array(param[key])) {
                 param[key] = [param[key], value];
             } else {
                 param[key].push(value);
