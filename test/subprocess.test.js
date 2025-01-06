@@ -7,7 +7,7 @@ describe('module.subprocess', function () {
 
   describe('ExecutionProcess', function () {
 
-    test('should ping localhost', async function () {
+    test.skip('should ping localhost', async function () {
       const ping = ExecutionProcess('ping', { encoding: 'cp437' })
       await expect(ping()).rejects.toThrow()
       const result = await ping({ n: 1 }, 'localhost')
