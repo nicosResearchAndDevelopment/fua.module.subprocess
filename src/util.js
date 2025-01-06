@@ -1,5 +1,5 @@
 const
-    is   = require('@nrd/fua.core.is'),
+    is   = require('@fua/core.is'),
     util = exports;
 
 util.isExecutable = is.validator.string(/^[a-z][a-z0-9\-_]*$/i);

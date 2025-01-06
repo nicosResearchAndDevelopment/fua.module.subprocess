@@ -1,5 +1,5 @@
 {
-  "name": "@nrd/fua.module.subprocess",
+  "name": "@fua/module.subprocess",
   "version": "1.0.1",
   "description": "",
   "main": "src/subprocess.js",
@@ -7,12 +7,12 @@
     "src/*"
   ],
   "dependencies": {
-    "@nrd/fua.core.assert": "^1.0.2",
-    "@nrd/fua.core.is": "^1.0.7"
+    "@fua/core.assert": "^1.0.2",
+    "@fua/core.is": "^1.0.7"
   },
   "devDependencies": {
-    "mocha": "^8.2.1",
-    "expect": "^26.6.2"
+    "expect": "26.x",
+    "mocha": "10.x"
   },
   "scripts": {
     "test": "mocha"
@@ -24,8 +24,8 @@
   },
   "repository": {
     "type": "git",
-    "url": "ssh://git@git02.int.nsc.ag:10022/research/fua/module/subprocess.git"
+    "url": "ssh://git@github.com:nicosResearchAndDevelopment/fua.module.subprocess.git"
   },
-  "author": "spetrac@nicos-ag.com",
-  "license": "UNLICENSED"
+  "author": "Simon Petrac <pfoerdie@gmail.com>",
+  "license": "MIT"
 }
