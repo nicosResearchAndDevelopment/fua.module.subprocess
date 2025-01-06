@@ -7,13 +7,11 @@ describe('module.subprocess', function () {
 
   describe('ExecutionProcess', function () {
 
-    test('should ping google.com', async function () {
-      const ping = ExecutionProcess('ping', { encoding: 'cp437' });
-      await expect(ping()).rejects.toThrow();
-      const result = await ping({ n: 1 }, 'google.com');
-      expect(typeof result).toBe('string');
-      // console.log(result);
-      // console.log(await ping());
+    test('should ping localhost', async function () {
+      const ping = ExecutionProcess('ping', { encoding: 'cp437' })
+      await expect(ping()).rejects.toThrow()
+      const result = await ping({ n: 1 }, 'localhost')
+      expect(typeof result).toBe('string')
     });
 
     test('should fail marzipan', async function () {
